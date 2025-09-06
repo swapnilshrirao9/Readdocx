@@ -1,0 +1,8 @@
+Django>=5.0
+gunicorn
+python-docx
+psycopg2-binary
+django-extensions
+django-sslserver
+django-environ
+gTTS

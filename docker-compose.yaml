@@ -1,0 +1,61 @@
+services:
+  postgresdb:
+     image:  postgres:latest
+     container_name: postgresdb
+     ports: 
+       - 5432:5432
+     env_file:
+       - .env
+     volumes:
+      - ./postgress:/var/lib/postgres/data
+     networks:
+       - django1
+
+
+  readfile:
+     image: py_dj_app_read:v5.0
+     container_name: readfile
+    # command: >
+    #    sh -c "cd /app && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput
+    #           gunicorn django_file_reader.wsgi:application --bind 0.0.0.0:8000 --timeout 300"
+     command: >
+       sh -c "cd /app && tail -f /dev/null"
+     env_file:
+       - .env
+     ports:
+       - 8000:8000
+       - 443:443
+     volumes:
+       - ./read_file_dockerapp:/app
+     depends_on:
+       - postgresdb
+     networks:
+       - django1
+     healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  pgadmin:
+     image: elestio/pgadmin:latest
+     container_name: pgadmin
+     restart: always
+     environment:
+       PGADMIN_DEFAULT_EMAIL: admin@admin.com
+       PGADMIN_DEFAULT_PASSWORD: admin
+     ports:
+       - "5050:80"
+     depends_on:
+       - postgresdb
+     networks:
+       - django1
+
+       
+networks:
+  django1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.28.1.0/24"
+

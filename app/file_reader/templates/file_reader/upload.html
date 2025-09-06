@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload DOCX</title>
+</head>
+<body>
+    <h2>Upload a DOCX file</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" accept=".docx">
+        <button type="submit">Upload & Listen</button>
+    </form>
+</body>
+</html>
+

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Uploaded Files</h2>
+<ul>
+    {% for doc in documents %}
+        <li><a href="{% url 'detail_file' doc.pk %}">{{ doc.file.name }}</a></li>
+    {% empty %}
+        <li>No files uploaded yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

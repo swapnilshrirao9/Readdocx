@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Read DOCX</title>
+</head>
+<body>
+    <h2>Reading DOCX File</h2>
+
+    {% if current_text %}
+        <p><strong>Paragraph {{ position|add:1 }} of {{ total }}</strong></p>
+        <p>{{ current_text }}</p>
+    {% else %}
+        <p>No content available.</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="prev">Previous</button>
+        <button type="submit" name="next">Next</button>
+        <button type="submit" name="reset">Restart</button>
+    </form>
+</body>
+</html>
+

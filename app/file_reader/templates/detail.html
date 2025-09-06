@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>{{ document.file.name }}</h1>
+
+    <ol id="lines">
+        {% for line in lines %}
+            <li>{{ line.text }}</li>
+        {% endfor %}
+    </ol>
+
+    <!-- Single audio player -->
+    <audio id="audioPlayer" controls></audio>
+
+    <button onclick="playAll()">▶ Play All</button>
+    <button onclick="pauseAudio()">⏸ Pause</button>
+    <button onclick="stopAudio()">⏹ Stop</button>
+    <button onclick="restartAudio()">⏮ Restart</button>
+
+    <script>
+        const audioPlayer = document.getElementById("audioPlayer");
+        const audioFiles = [
+            {% for line in lines %}
+                "{{ line.audio_file.url }}",
+            {% endfor %}
+        ];
+
+        let currentIndex = 0;
+
+        function playAll() {
+            if (currentIndex >= audioFiles.length) {
+                currentIndex = 0; // restart after finishing
+            }
+            audioPlayer.src = audioFiles[currentIndex];
+            audioPlayer.play();
+        }
+
+        audioPlayer.addEventListener("ended", () => {
+            currentIndex++;
+            if (currentIndex < audioFiles.length) {
+                playAll();  // play next line
+            }
+        });
+
+        function pauseAudio() {
+            audioPlayer.pause();
+        }
+
+        function stopAudio() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+        }
+
+        function restartAudio() {
+            currentIndex = 0;
+            playAll();
+        }
+    </script>
+{% endblock %}
+
